@@ -1,0 +1,30 @@
+package com.example.taepang.domain.member.service;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.example.taepang.domain.member.dto.reqDto.CreateUserReqDto;
+import com.example.taepang.domain.member.dto.resDto.CreateUserResDto;
+import com.example.taepang.domain.member.entity.User;
+import com.example.taepang.domain.member.repository.UserRepository;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class UserService {
+
+	private final UserRepository userRepository;
+
+	@Transactional
+	public CreateUserResDto createUser(CreateUserReqDto reqDto) {
+		if (userRepository.existsByEmail(reqDto.getEmail())) {
+			throw new IllegalArgumentException("이미 존재하는 이메일 입니다.");
+		}
+
+		User user = User.createUser(reqDto.getUsername(), reqDto.getPhoneNumber(), reqDto.getEmail());
+		userRepository.save(user);
+		return CreateUserResDto.from(user);
+	}
+
+}
