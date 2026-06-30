@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.taepang.domain.member.dto.reqDto.CreateUserReqDto;
 import com.example.taepang.domain.member.dto.resDto.CreateUserResDto;
+import com.example.taepang.domain.member.dto.resDto.FindUserResDto;
 import com.example.taepang.domain.member.entity.User;
 import com.example.taepang.domain.member.repository.UserRepository;
 
@@ -25,6 +26,13 @@ public class UserService {
 		User user = User.createUser(reqDto.getUsername(), reqDto.getPhoneNumber(), reqDto.getEmail());
 		userRepository.save(user);
 		return CreateUserResDto.from(user);
+	}
+
+	public FindUserResDto findUser(Long id) {
+		User user = userRepository.findById(id).orElseThrow(
+			() -> new IllegalArgumentException("사용자를 찾을 수 없습니다. ID : " + id)
+		);
+		return FindUserResDto.from(user);
 	}
 
 }
