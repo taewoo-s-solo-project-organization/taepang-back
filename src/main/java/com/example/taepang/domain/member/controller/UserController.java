@@ -2,6 +2,7 @@ package com.example.taepang.domain.member.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,6 +42,12 @@ public class UserController {
 	@PatchMapping("/modify/{id}")
 	public ResponseEntity<FindUserResDto> modifyUser(@PathVariable Long id, @RequestBody ModifyUserReqDto reqDto) {
 		return ResponseEntity.status(HttpStatus.OK).body(userService.modifyUser(id, reqDto));
+	}
+
+	@DeleteMapping("/remove/{id}")
+	public ResponseEntity<Void> removeUser(@PathVariable Long id) {
+		userService.removeUser(id);
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
 }
