@@ -2,6 +2,8 @@ package com.example.taepang.domain.member.entity;
 
 import java.time.LocalDateTime;
 
+import com.example.taepang.domain.member.dto.reqDto.ModifyUserReqDto;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -48,6 +50,21 @@ public class User {
 			.phoneNumber(phoneNumber)
 			.email(email)
 			.build();
+	}
+
+	public void updateUserInfo(ModifyUserReqDto reqDto) {
+		// TODO : MapStruct 를 이용하여 if 문 간소화 하기
+		if (reqDto.getEmail() != null) {
+			this.email = reqDto.getEmail();
+		}
+		if (reqDto.getUsername() != null) {
+			this.username = reqDto.getUsername();
+		}
+		if (reqDto.getPhoneNumber() != null) {
+			this.phoneNumber = reqDto.getPhoneNumber();
+		}
+		this.updatedAt = LocalDateTime.now();
+
 	}
 
 }
