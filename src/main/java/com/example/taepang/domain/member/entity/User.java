@@ -1,8 +1,7 @@
 package com.example.taepang.domain.member.entity;
 
-import java.time.LocalDateTime;
-
 import com.example.taepang.domain.member.dto.reqDto.ModifyUserReqDto;
+import com.example.taepang.global.TimeStamped;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "users")
-public class User {
+public class User extends TimeStamped {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,16 +30,11 @@ public class User {
 	@Column(nullable = false, unique = true)
 	private String email;
 
-	private LocalDateTime createdAt;
-	private LocalDateTime updatedAt;
-
 	@Builder
 	public User(String username, String phoneNumber, String email) {
 		this.username = username;
 		this.phoneNumber = phoneNumber;
 		this.email = email;
-		this.createdAt = LocalDateTime.now();
-		this.updatedAt = LocalDateTime.now();
 
 	}
 
@@ -63,7 +57,6 @@ public class User {
 		if (reqDto.getPhoneNumber() != null) {
 			this.phoneNumber = reqDto.getPhoneNumber();
 		}
-		this.updatedAt = LocalDateTime.now();
 
 	}
 

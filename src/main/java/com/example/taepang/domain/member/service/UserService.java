@@ -18,7 +18,12 @@ public class UserService {
 
 	private final UserRepository userRepository;
 
-	@Transactional
+	private User findUserById(Long id) {
+		return userRepository.findById(id).orElseThrow(
+			() -> new IllegalArgumentException("사용자를 찾을 수 없습니다. ID" + id)
+		);
+	}
+
 	public CreateUserResDto createUser(CreateUserReqDto reqDto) {
 		if (userRepository.existsByEmail(reqDto.getEmail())) {
 			throw new IllegalArgumentException("이미 존재하는 이메일 입니다.");
@@ -30,27 +35,19 @@ public class UserService {
 	}
 
 	public FindUserResDto findUser(Long id) {
-		User user = userRepository.findById(id).orElseThrow(
-			() -> new IllegalArgumentException("사용자를 찾을 수 없습니다. ID : " + id)
-		);
-		return FindUserResDto.from(user);
+		return FindUserResDto.from(findUserById(id));
 	}
 
 	@Transactional
 	public FindUserResDto modifyUser(Long id, ModifyUserReqDto reqDto) {
-		User user = userRepository.findById(id).orElseThrow(
-			() -> new IllegalArgumentException("사용자를 찾을 수 없습니다. ID : " + id)
-		);
-
+		User user = findUserById(id);
 		user.updateUserInfo(reqDto);// JPA 의 변경감지
+		// TODO : 같은 내용 중복 update 요청 시 update 쿼리가 날라가는 비효율 발생
 		return FindUserResDto.from(user);
 	}
 
 	@Transactional
 	public void removeUser(Long id) {
-		User user = userRepository.findById(id).orElseThrow(
-			() -> new IllegalArgumentException("사용자를 찾을 수 없습니다. ID : " + id)
-		);
-		userRepository.delete(user); // TODO : Soft Delete 로 변경 필요
+		userRepository.delete(findUserById(id)); // TODO : Soft Delete 로 변경 필요
 	}
 }
