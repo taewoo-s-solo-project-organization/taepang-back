@@ -41,7 +41,7 @@ public class UserService {
 	@Transactional
 	public FindUserResDto modifyUser(Long id, ModifyUserReqDto reqDto) {
 		User user = findUserById(id);
-		user.updateUserInfo(reqDto);// JPA 의 변경감지
+		user.update(reqDto);// JPA 의 변경감지
 		return FindUserResDto.from(user);
 	}
 
