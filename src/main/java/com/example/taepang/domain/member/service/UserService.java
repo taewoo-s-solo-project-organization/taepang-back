@@ -42,7 +42,6 @@ public class UserService {
 	public FindUserResDto modifyUser(Long id, ModifyUserReqDto reqDto) {
 		User user = findUserById(id);
 		user.updateUserInfo(reqDto);// JPA 의 변경감지
-		// TODO : 같은 내용 중복 update 요청 시 update 쿼리가 날라가는 비효율 발생
 		return FindUserResDto.from(user);
 	}
 

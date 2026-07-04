@@ -1,5 +1,7 @@
 package com.example.taepang.domain.member.entity;
 
+import java.time.LocalDateTime;
+
 import com.example.taepang.domain.member.dto.reqDto.ModifyUserReqDto;
 import com.example.taepang.global.TimeStamped;
 
@@ -47,17 +49,24 @@ public class User extends TimeStamped {
 	}
 
 	public void updateUserInfo(ModifyUserReqDto reqDto) {
+		boolean flag = false;
 		// TODO : MapStruct 를 이용하여 if 문 간소화 하기
 		if (reqDto.getEmail() != null) {
 			this.email = reqDto.getEmail();
+			flag = true;
 		}
 		if (reqDto.getUsername() != null) {
 			this.username = reqDto.getUsername();
+			flag = true;
 		}
 		if (reqDto.getPhoneNumber() != null) {
 			this.phoneNumber = reqDto.getPhoneNumber();
+			flag = true;
 		}
+		if (flag) {
+			this.updatedAt = LocalDateTime.now();
 
+		}
 	}
 
 }

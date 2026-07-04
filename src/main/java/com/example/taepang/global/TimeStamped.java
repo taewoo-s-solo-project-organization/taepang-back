@@ -16,14 +16,12 @@ import lombok.Getter;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class TimeStamped {
 
+	@LastModifiedDate
+	@Column
+	protected LocalDateTime updatedAt;
 	@CreatedDate
 	@Column(updatable = false)
 	private LocalDateTime createdAt;
-
-	@LastModifiedDate
-	@Column
-	private LocalDateTime updatedAt;
-
 	@Column
 	private LocalDateTime deletedAt;
 }
