@@ -15,6 +15,7 @@ import com.example.taepang.domain.member.dto.reqDto.CreateUserReqDto;
 import com.example.taepang.domain.member.dto.reqDto.ModifyUserReqDto;
 import com.example.taepang.domain.member.dto.resDto.CreateUserResDto;
 import com.example.taepang.domain.member.dto.resDto.FindUserResDto;
+import com.example.taepang.domain.member.dto.resDto.UpdateUserResDto;
 import com.example.taepang.domain.member.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -40,7 +41,7 @@ public class UserController {
 
 	// 멤버 객체 수정 (일부 수정, id 값 기준)
 	@PatchMapping("/modify/{id}")
-	public ResponseEntity<FindUserResDto> modifyUser(@PathVariable Long id, @RequestBody ModifyUserReqDto reqDto) {
+	public ResponseEntity<UpdateUserResDto> modifyUser(@PathVariable Long id, @RequestBody ModifyUserReqDto reqDto) {
 		return ResponseEntity.status(HttpStatus.OK).body(userService.modifyUser(id, reqDto));
 	}
 

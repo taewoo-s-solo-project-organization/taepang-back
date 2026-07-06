@@ -9,12 +9,12 @@ import lombok.experimental.SuperBuilder;
 
 @Getter
 @SuperBuilder
-public class FindUserResDto extends UserResDto {
+public class UpdateUserResDto extends UserResDto {
 
 	private final LocalDateTime updatedAt;
 
-	public static FindUserResDto from(User user) {
-		return FindUserResDto.builder()
+	public static UpdateUserResDto from(User user) {
+		return UpdateUserResDto.builder()
 			.username(user.getUsername())
 			.phoneNumber(user.getPhoneNumber())
 			.email(user.getEmail())

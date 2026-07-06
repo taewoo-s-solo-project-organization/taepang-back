@@ -7,6 +7,7 @@ import com.example.taepang.domain.member.dto.reqDto.CreateUserReqDto;
 import com.example.taepang.domain.member.dto.reqDto.ModifyUserReqDto;
 import com.example.taepang.domain.member.dto.resDto.CreateUserResDto;
 import com.example.taepang.domain.member.dto.resDto.FindUserResDto;
+import com.example.taepang.domain.member.dto.resDto.UpdateUserResDto;
 import com.example.taepang.domain.member.entity.User;
 import com.example.taepang.domain.member.repository.UserRepository;
 
@@ -39,10 +40,10 @@ public class UserService {
 	}
 
 	@Transactional
-	public FindUserResDto modifyUser(Long id, ModifyUserReqDto reqDto) {
+	public UpdateUserResDto modifyUser(Long id, ModifyUserReqDto reqDto) {
 		User user = findUserById(id);
 		user.update(reqDto);// JPA 의 변경감지
-		return FindUserResDto.from(user);
+		return UpdateUserResDto.from(user);
 	}
 
 	@Transactional
