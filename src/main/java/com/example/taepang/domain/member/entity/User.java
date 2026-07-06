@@ -50,18 +50,17 @@ public class User extends TimeStamped {
 	}
 
 	public void update(ModifyUserReqDto reqDto) {
-		updateField(reqDto.getEmail(), val -> this.email = val);
-		updateField(reqDto.getUsername(), val -> this.username = val);
-		updateField(reqDto.getPhoneNumber(), val -> this.phoneNumber = val);
+		updateField(reqDto.getEmail(), this.email, val -> this.email = val);
+		updateField(reqDto.getUsername(), this.username, val -> this.username = val);
+		updateField(reqDto.getPhoneNumber(), this.phoneNumber, val -> this.phoneNumber = val);
 	}
 
-	private <T> void updateField(T value, Consumer<T> setter) {
-		if (value != null) {
+	private <T, V> void updateField(T value, V info, Consumer<T> setter) {
+		if (value != null && !value.equals(info)) {
 			setter.accept(value);
 			this.updatedAt = LocalDateTime.now();
 			// 가독성 위해 여러번 update
 			// update 내용이 많아지면 한번만 발생하도록 수정 필요
 		}
 	}
-
 }
