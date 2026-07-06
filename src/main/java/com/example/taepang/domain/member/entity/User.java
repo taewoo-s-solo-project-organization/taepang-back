@@ -63,4 +63,8 @@ public class User extends TimeStamped {
 			// update 내용이 많아지면 한번만 발생하도록 수정 필요
 		}
 	}
+
+	public void delete() {
+		this.deletedAt = LocalDateTime.now();
+	}
 }

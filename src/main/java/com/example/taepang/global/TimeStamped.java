@@ -19,9 +19,9 @@ public abstract class TimeStamped {
 	@LastModifiedDate
 	@Column
 	protected LocalDateTime updatedAt;
+	@Column
+	protected LocalDateTime deletedAt;
 	@CreatedDate
 	@Column(updatable = false)
 	private LocalDateTime createdAt;
-	@Column
-	private LocalDateTime deletedAt;
 }

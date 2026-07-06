@@ -20,8 +20,8 @@ public class UserService {
 	private final UserRepository userRepository;
 
 	private User findUserById(Long id) {
-		return userRepository.findById(id).orElseThrow(
-			() -> new IllegalArgumentException("사용자를 찾을 수 없습니다. ID" + id)
+		return userRepository.findByIdAndDeletedAtIsNull(id).orElseThrow(
+			() -> new IllegalArgumentException("사용자를 찾을 수 없습니다. ID : " + id)
 		);
 	}
 
@@ -48,6 +48,6 @@ public class UserService {
 
 	@Transactional
 	public void removeUser(Long id) {
-		userRepository.delete(findUserById(id)); // TODO : Soft Delete 로 변경 필요
+		findUserById(id).delete();
 	}
 }
