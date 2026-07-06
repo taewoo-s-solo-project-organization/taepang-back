@@ -1,8 +1,10 @@
 package com.example.taepang.domain.member.entity;
 
 import java.time.LocalDateTime;
+import java.util.function.Consumer;
 
 import com.example.taepang.domain.member.dto.reqDto.ModifyUserReqDto;
+import com.example.taepang.global.TimeStamped;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,7 +21,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "users")
-public class User {
+public class User extends TimeStamped {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,16 +33,11 @@ public class User {
 	@Column(nullable = false, unique = true)
 	private String email;
 
-	private LocalDateTime createdAt;
-	private LocalDateTime updatedAt;
-
 	@Builder
 	public User(String username, String phoneNumber, String email) {
 		this.username = username;
 		this.phoneNumber = phoneNumber;
 		this.email = email;
-		this.createdAt = LocalDateTime.now();
-		this.updatedAt = LocalDateTime.now();
 
 	}
 
@@ -52,19 +49,22 @@ public class User {
 			.build();
 	}
 
-	public void updateUserInfo(ModifyUserReqDto reqDto) {
-		// TODO : MapStruct 를 이용하여 if 문 간소화 하기
-		if (reqDto.getEmail() != null) {
-			this.email = reqDto.getEmail();
-		}
-		if (reqDto.getUsername() != null) {
-			this.username = reqDto.getUsername();
-		}
-		if (reqDto.getPhoneNumber() != null) {
-			this.phoneNumber = reqDto.getPhoneNumber();
-		}
-		this.updatedAt = LocalDateTime.now();
-
+	public void update(ModifyUserReqDto reqDto) {
+		updateField(reqDto.getEmail(), this.email, val -> this.email = val);
+		updateField(reqDto.getUsername(), this.username, val -> this.username = val);
+		updateField(reqDto.getPhoneNumber(), this.phoneNumber, val -> this.phoneNumber = val);
 	}
 
+	private <T, V> void updateField(T value, V info, Consumer<T> setter) {
+		if (value != null && !value.equals(info)) {
+			setter.accept(value);
+			this.updatedAt = LocalDateTime.now();
+			// 가독성 위해 여러번 update
+			// update 내용이 많아지면 한번만 발생하도록 수정 필요
+		}
+	}
+
+	public void delete() {
+		this.deletedAt = LocalDateTime.now();
+	}
 }

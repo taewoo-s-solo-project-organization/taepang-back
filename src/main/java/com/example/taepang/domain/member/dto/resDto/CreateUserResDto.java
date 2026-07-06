@@ -1,28 +1,23 @@
 package com.example.taepang.domain.member.dto.resDto;
 
-import java.time.LocalDateTime;
-
 import com.example.taepang.domain.member.entity.User;
 
-import lombok.Builder;
 import lombok.Getter;
+import lombok.experimental.SuperBuilder;
 
 @Getter
-@Builder
-public class CreateUserResDto {
-	private final String username;
-	private final String phoneNumber;
-	private final String email;
-	private final LocalDateTime createdAt;
-	private final LocalDateTime updatedAt;
+@SuperBuilder
+public class CreateUserResDto extends UserResDto {
+
+	private final Long id;
 
 	public static CreateUserResDto from(User user) {
 		return CreateUserResDto.builder()
+			.id(user.getId())
 			.username(user.getUsername())
 			.phoneNumber(user.getPhoneNumber())
 			.email(user.getEmail())
 			.createdAt(user.getCreatedAt())
-			.updatedAt(user.getUpdatedAt())
 			.build();
 	}
 }

@@ -1,6 +1,6 @@
 package com.example.taepang.domain.member.entity;
 
-import java.time.LocalDateTime;
+import com.example.taepang.global.TimeStamped;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,14 +12,11 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "sellers")
-public class Seller {
+public class Seller extends TimeStamped {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
-	private LocalDateTime registeredAt;
-	private LocalDateTime updatedAt;
 
 	private String businessNumber; // 사업자 번호
 	private String account; // 계좌
