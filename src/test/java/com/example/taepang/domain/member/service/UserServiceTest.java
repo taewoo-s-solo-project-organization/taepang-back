@@ -140,6 +140,8 @@ class UserServiceTest {
 		assertThat(response).isNotNull();
 	}
 
+	// ==================== deleteUser ====================
+
 	@Test
 	@DisplayName("성공 : 소프트 delete 메서드가 실행된다.")
 	void 유저_삭제() {
