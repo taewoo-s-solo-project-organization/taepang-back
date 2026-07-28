@@ -11,7 +11,9 @@ import com.example.taepang.domain.customer.repository.CustomerRepository;
 import com.example.taepang.util.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CustomerAuthService implements AuthService {
@@ -25,6 +27,9 @@ public class CustomerAuthService implements AuthService {
 		if (customerRepository.existsByEmail(signupReqDto.getEmail())) {
 			throw new IllegalArgumentException("이미 사용중인 이메일 입니다.");
 		}
+		log.info("사용자 비밀번호", signupReqDto.getPassword());
+		log.info("사용자 메일", signupReqDto.getEmail());
+		log.info("사용자 전화번호", signupReqDto.getPhoneNumber());
 
 		String hashedPassword = passwordEncoder.encode(signupReqDto.getPassword());
 
