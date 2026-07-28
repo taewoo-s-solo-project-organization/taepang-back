@@ -1,4 +1,4 @@
-package com.example.taepang.domain.member.dto.resDto;
+package com.example.taepang.domain.customer.dto.resDto;
 
 import java.time.LocalDateTime;
 
@@ -7,7 +7,7 @@ import lombok.experimental.SuperBuilder;
 
 @Getter
 @SuperBuilder
-public abstract class UserResDto {
+public abstract class CustomerResDto {
 
 	private final String username;
 	private final String phoneNumber;

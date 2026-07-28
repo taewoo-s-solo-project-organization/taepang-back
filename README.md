@@ -75,7 +75,7 @@ gradlew.bat test
 src/main/java/com/example/taepang/
 ├── TaepangApplication.java
 └── domain/
-    └── member/
+    └── customer/
         ├── controller/   # REST API
         ├── service/      # 비즈니스 로직
         ├── repository/   # JPA Repository
@@ -87,23 +87,23 @@ src/main/java/com/example/taepang/
 
 ## Domain Model (Member)
 
-| Entity    | 설명    | 비고                              |
-|-----------|-------|---------------------------------|
-| `User`    | 일반 회원 | `email` unique                  |
-| `Seller`  | 판매자   | `User`와 1:1 (`sellers.user_id`) |
-| `Manager` | 관리자   | TODO: 인증/암호화 정책 정의 필요           |
+| Entity     | 설명    | 비고                              |
+|------------|-------|---------------------------------|
+| `Customer` | 일반 회원 | `email` unique                  |
+| `Seller`   | 판매자   | `User`와 1:1 (`sellers.user_id`) |
+| `Manager`  | 관리자   | TODO: 인증/암호화 정책 정의 필요           |
 
-### User ↔ Seller 관계
+### Customer ↔ Seller 관계
 
-- `User`는 `Seller` 없이 존재할 수 있음 (일반 회원)
-- `Seller`는 반드시 `User`를 참조해야 함
+- `Customer`는 `Seller` 없이 존재할 수 있음 (일반 회원)
+- `Customer`는 반드시 `User`를 참조해야 함
 - FK는 `Seller` 쪽(`user_id`)에 위치
 
 ---
 
 ## API (User)
 
-Base URL: `/user`
+Base URL: `/customer`
 
 | Method   | Path           | 설명       | Status           |
 |----------|----------------|----------|------------------|
@@ -112,7 +112,7 @@ Base URL: `/user`
 | `PATCH`  | `/modify/{id}` | 회원 정보 수정 | `200 OK`         |
 | `DELETE` | `/remove/{id}` | 회원 삭제    | `204 No Content` |
 
-### POST `/user/join`
+### POST `/customer/join`
 
 **Request**
 
@@ -120,7 +120,7 @@ Base URL: `/user`
 {
   "username": "홍길동",
   "phoneNumber": "010-1234-5678",
-  "email": "user@example.com"
+  "email": "customer@example.com"
 }
 ```
 
@@ -130,7 +130,7 @@ Base URL: `/user`
 {
   "username": "홍길동",
   "phoneNumber": "010-1234-5678",
-  "email": "user@example.com",
+  "email": "customer@example.com",
   "createdAt": "2026-06-28T12:00:00",
   "updatedAt": "2026-06-28T12:00:00"
 }
@@ -140,7 +140,7 @@ Base URL: `/user`
 
 - 이메일 중복: `409 Conflict` (TODO: 전역 예외 처리 적용 후 명시)
 
-### PATCH `/user/modify/{id}`
+### PATCH `/customer/modify/{id}`
 
 null이 아닌 필드만 수정합니다.
 

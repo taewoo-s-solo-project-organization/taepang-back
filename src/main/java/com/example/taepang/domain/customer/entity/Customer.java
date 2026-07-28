@@ -1,9 +1,9 @@
-package com.example.taepang.domain.member.entity;
+package com.example.taepang.domain.customer.entity;
 
 import java.time.LocalDateTime;
 import java.util.function.Consumer;
 
-import com.example.taepang.domain.member.dto.reqDto.ModifyUserReqDto;
+import com.example.taepang.domain.customer.dto.reqDto.ModifyCustomerReqDto;
 import com.example.taepang.global.TimeStamped;
 
 import jakarta.persistence.Column;
@@ -20,8 +20,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "users")
-public class User extends TimeStamped {
+@Table(name = "customers")
+public class Customer extends TimeStamped {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,22 +34,22 @@ public class User extends TimeStamped {
 	private String email;
 
 	@Builder
-	public User(String username, String phoneNumber, String email) {
+	public Customer(String username, String phoneNumber, String email) {
 		this.username = username;
 		this.phoneNumber = phoneNumber;
 		this.email = email;
 
 	}
 
-	public static User createUser(String username, String phoneNumber, String email) {
-		return User.builder()
+	public static Customer createUser(String username, String phoneNumber, String email) {
+		return Customer.builder()
 			.username(username)
 			.phoneNumber(phoneNumber)
 			.email(email)
 			.build();
 	}
 
-	public void update(ModifyUserReqDto reqDto) {
+	public void update(ModifyCustomerReqDto reqDto) {
 		updateField(reqDto.getEmail(), this.email, val -> this.email = val);
 		updateField(reqDto.getUsername(), this.username, val -> this.username = val);
 		updateField(reqDto.getPhoneNumber(), this.phoneNumber, val -> this.phoneNumber = val);
