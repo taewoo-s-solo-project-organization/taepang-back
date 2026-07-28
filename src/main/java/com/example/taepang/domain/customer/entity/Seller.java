@@ -1,4 +1,4 @@
-package com.example.taepang.domain.member.entity;
+package com.example.taepang.domain.customer.entity;
 
 import com.example.taepang.global.TimeStamped;
 
@@ -22,7 +22,7 @@ public class Seller extends TimeStamped {
 	private String account; // 계좌
 
 	@OneToOne
-	@JoinColumn(name = "user_id")
-	private User user; // Seller 없이는 User 가 있어도, User 없이는 Seller 가 있을 수 는 없기 때문에 외래키 주인을 이쪽에
+	@JoinColumn(name = "customer_id")
+	private Customer customer; // Seller 없이는 User 가 있어도, User 없이는 Seller 가 있을 수 는 없기 때문에 외래키 주인을 이쪽에
 
 }
