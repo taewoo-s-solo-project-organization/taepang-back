@@ -29,21 +29,28 @@ public class Customer extends TimeStamped {
 
 	@Column(nullable = false)
 	private String username;
+
 	private String phoneNumber;
+
+	@Column(nullable = false)
+	private String password;
+
 	@Column(nullable = false, unique = true)
 	private String email;
 
 	@Builder
-	public Customer(String username, String phoneNumber, String email) {
+	public Customer(String username, String phoneNumber, String password, String email) {
 		this.username = username;
 		this.phoneNumber = phoneNumber;
+		this.password = password;
 		this.email = email;
 
 	}
 
-	public static Customer createUser(String username, String phoneNumber, String email) {
+	public static Customer createUser(String username, String phoneNumber, String password, String email) {
 		return Customer.builder()
 			.username(username)
+			.password(password)
 			.phoneNumber(phoneNumber)
 			.email(email)
 			.build();
@@ -53,6 +60,7 @@ public class Customer extends TimeStamped {
 		updateField(reqDto.getEmail(), this.email, val -> this.email = val);
 		updateField(reqDto.getUsername(), this.username, val -> this.username = val);
 		updateField(reqDto.getPhoneNumber(), this.phoneNumber, val -> this.phoneNumber = val);
+		// TODO : 비밀번호 변경은암호화, 복호화 과정이 좀 복잡한 편이고, Customer 도메인만 가지고 있는 기능도 아니라 따로 구현 예정
 	}
 
 	private <T, V> void updateField(T value, V info, Consumer<T> setter) {
