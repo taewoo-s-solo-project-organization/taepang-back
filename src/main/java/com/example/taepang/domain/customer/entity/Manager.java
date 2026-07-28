@@ -1,4 +1,4 @@
-package com.example.taepang.domain.member.entity;
+package com.example.taepang.domain.customer.entity;
 
 import com.example.taepang.global.TimeStamped;
 
