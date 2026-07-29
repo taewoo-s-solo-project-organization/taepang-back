@@ -1,23 +1,26 @@
 package com.example.taepang.util;
 
-import java.nio.charset.StandardCharsets;
-import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
 
 import javax.crypto.SecretKey;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+import org.springframework.web.server.ResponseStatusException;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 public class JwtUtil {
 
@@ -27,13 +30,11 @@ public class JwtUtil {
 	public static final String AUTHORIZATION_KEY = "auth";
 	// Token 식별자
 	public static final String BEARER_PREFIX = "Bearer ";
-	// 로그 설정
-	public static final Logger logger = LoggerFactory.getLogger("JWT 관련 로그");
 	// 토큰 만료 시간
 	private final long TOKEN_TIME = 60 * 60 * 1000L; // 60분
 	@Value("${jwt.secret.key}")
 	private String secretKey;
-	private Key key;
+	private SecretKey key;
 
 	@PostConstruct
 	public void init() {
@@ -50,35 +51,51 @@ public class JwtUtil {
 			.claim("email", email)
 			.issuedAt(new Date()) // 발급일
 			.expiration(new Date(System.currentTimeMillis() + TOKEN_TIME))
-			.signWith(key) // 암호화 알고리즘 자동으로 HS256/HS384/HS512 중 맞춰서 적용 (0.12 버전 이후)
+			.signWith(key)
 			.compact();
 
 	}
 
 	private SecretKey getSigningKey() {
-		byte[] keyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
-		return Keys.hmacShaKeyFor(keyBytes);
+		return this.key;
 	}
 
 	// 토큰 검증 (요청과 함께 헤더에서 온 값을 검증할 때 사용)
-	public boolean validateToken(String token) {
+	public void validateToken(String token) {
 		try {
 			Jwts.parser().verifyWith(getSigningKey())
 				.build()
 				.parseSignedClaims(token)
 				.getPayload();
 
-			return true;
-
 		} catch (SecurityException | MalformedJwtException e) {
-			logger.error("Invalid JWT signature, 유효하지 않는 JWT 서명입니다.");
+			log.error("Invalid JWT signature, 유효하지 않는 JWT 서명입니다.");
+			throw new SecurityException();
 		} catch (ExpiredJwtException e) {
-			logger.error("Expired JWT token, + 만료된 JWT 토큰 입니다.");
+			log.error("Expired JWT token, + 만료된 JWT 토큰 입니다.");
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Expired JWT token, 만료된 JWT token 입니다.");
+		} catch (UnsupportedJwtException e) {
+			log.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
+			throw new UnsupportedJwtException(e.getMessage());
 		} catch (IllegalArgumentException e) {
-			logger.error("JWT claims is empty, 잘못된 JWT 토큰입니다.");
-		}
+			log.error("JWT claims is empty, 잘못된 JWT 토큰입니다.");
+			throw new IllegalArgumentException("잘못된 JWT 토큰 입니다.");
 
-		return false;
+		}
 	}
 
+	public String substringToken(String tokenValue) {
+		if (StringUtils.hasText(tokenValue) && tokenValue.startsWith(BEARER_PREFIX)) {
+			return tokenValue.substring(BEARER_PREFIX.length());
+		}
+		throw new IllegalArgumentException("토큰이 존재하지 않거나 유효하지 않은 형식입니다.");
+	}
+
+	public Claims getMemberClaims(String token) {
+		return Jwts.parser()
+			.verifyWith(getSigningKey())
+			.build()
+			.parseSignedClaims(token)
+			.getPayload();
+	}
 }
