@@ -7,6 +7,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import com.example.taepang.domain.auth.annotation.CurrentMember;
 import com.example.taepang.domain.auth.dto.VerifiedMember;
 import com.example.taepang.util.JwtUtil;
 
@@ -24,7 +25,11 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
 
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
-		return parameter.getParameterType().equals(VerifiedMember.class);
+		boolean hasAnnotation = parameter.hasParameterAnnotation(CurrentMember.class);
+		boolean isVerifiedMemberType = parameter.getParameterType().equals(VerifiedMember.class);
+		return hasAnnotation && isVerifiedMemberType;
+		// 커스텀 어노테이션이 붙어 있지 않으면 해당 리졸버 동작하지 않는다.
+		// TODO : 동작 안하면 현재 500 서버에러가 나는데 나중에 모든 예외처리 다룰 때 같이 예외 처리 메시지 클라이언트에 반환 구현하기
 	}
 
 	@Override // 나중에 VerifiedMember 의 정보를 가져와서 db 조회와 같이 사용할 수 있다.

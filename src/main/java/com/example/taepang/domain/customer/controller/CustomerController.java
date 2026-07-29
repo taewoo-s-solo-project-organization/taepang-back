@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.taepang.domain.auth.annotation.CurrentMember;
 import com.example.taepang.domain.auth.dto.VerifiedMember;
 import com.example.taepang.domain.customer.dto.reqDto.ModifyCustomerReqDto;
 import com.example.taepang.domain.customer.dto.resDto.FindCustomerResDto;
@@ -28,20 +29,20 @@ public class CustomerController {
 
 	// 손님 자신의 객체 조회 (일단은 id 값 기준으로)
 	@GetMapping("/info")
-	public ResponseEntity<FindCustomerResDto> getCustomerInfo(VerifiedMember member) {
+	public ResponseEntity<FindCustomerResDto> getCustomerInfo(@CurrentMember VerifiedMember member) {
 		return ResponseEntity.status(HttpStatus.OK).body(customerService.findUser(member.getId()));
 	}
 
 	// 멤버 객체 수정 (일부 수정, id 값 기준)
 	@PatchMapping("/modify")
-	public ResponseEntity<UpdateCustomerResDto> modifyCustomer(VerifiedMember member,
+	public ResponseEntity<UpdateCustomerResDto> modifyCustomer(@CurrentMember VerifiedMember member,
 		@RequestBody ModifyCustomerReqDto reqDto) {
 		return ResponseEntity.status(HttpStatus.OK).body(customerService.modifyUser(member.getId(), reqDto));
 	}
 
 	// 회원 탈퇴
 	@DeleteMapping("/remove")
-	public ResponseEntity<Void> removeCustomer(VerifiedMember member) {
+	public ResponseEntity<Void> removeCustomer(@CurrentMember VerifiedMember member) {
 		customerService.removeUser(member.getId());
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
