@@ -23,7 +23,8 @@ public class WebConfig implements WebMvcConfigurer {
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(authInterceptor)
 			.addPathPatterns("/**")
-			.excludePathPatterns("/auth/**");
+			.excludePathPatterns("/auth/**", "/favicon.ico", "/error");
+		// favicon 예외처리 안하면 요청이 두번씩 온다. (웹 브라우저의 요청 특징이다.)
 	}
 
 	@Override

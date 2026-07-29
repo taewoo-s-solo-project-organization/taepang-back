@@ -70,17 +70,13 @@ public class JwtUtil {
 
 		} catch (SecurityException | MalformedJwtException e) {
 			log.error("Invalid JWT signature, 유효하지 않는 JWT 서명입니다.");
-			throw new SecurityException();
 		} catch (ExpiredJwtException e) {
 			log.error("Expired JWT token, + 만료된 JWT 토큰 입니다.");
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Expired JWT token, 만료된 JWT token 입니다.");
 		} catch (UnsupportedJwtException e) {
 			log.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
-			throw new UnsupportedJwtException(e.getMessage());
 		} catch (IllegalArgumentException e) {
 			log.error("JWT claims is empty, 잘못된 JWT 토큰입니다.");
-			throw new IllegalArgumentException("잘못된 JWT 토큰 입니다.");
-
 		}
 	}
 
