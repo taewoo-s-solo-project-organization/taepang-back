@@ -43,8 +43,8 @@ public class CustomerAuthService implements AuthService {
 
 	@Override
 	public LoginResDto login(LoginReqDto loginReqDto) {
-		Customer customer = customerRepository.findByEmail(loginReqDto.getEmail()).orElseThrow(
-			() -> new IllegalArgumentException("존재하지 않는 이메일 입니다.")
+		Customer customer = customerRepository.findByEmailAndDeletedAtIsNull(loginReqDto.getEmail()).orElseThrow(
+			() -> new IllegalArgumentException("가입되지 않은 이메일 입니다.")
 		);
 
 		if (!passwordEncoder.matches(loginReqDto.getPassword(), customer.getPassword())) {
