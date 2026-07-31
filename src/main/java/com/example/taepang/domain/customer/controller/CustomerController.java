@@ -5,15 +5,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.taepang.domain.customer.dto.reqDto.CreateCustomerReqDto;
+import com.example.taepang.domain.auth.annotation.CurrentMember;
+import com.example.taepang.domain.auth.dto.VerifiedMember;
 import com.example.taepang.domain.customer.dto.reqDto.ModifyCustomerReqDto;
-import com.example.taepang.domain.customer.dto.resDto.CreateCustomerResDto;
 import com.example.taepang.domain.customer.dto.resDto.FindCustomerResDto;
 import com.example.taepang.domain.customer.dto.resDto.UpdateCustomerResDto;
 import com.example.taepang.domain.customer.service.CustomerService;
@@ -25,30 +23,27 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/customer")
 public class CustomerController {
 
+	// 해당 컨트롤러의 서비스들은 인증된 유저만 허가 된다.
+
 	private final CustomerService customerService;
 
-	// 멤버 객체 생성 (일반 사용자)
-	@PostMapping("/join")
-	public ResponseEntity<CreateCustomerResDto> createCustomer(@RequestBody CreateCustomerReqDto reqDto) {
-		return ResponseEntity.status(HttpStatus.CREATED).body(customerService.createUser(reqDto));
-	}
-
-	// 멤버 객체 조회 (일단은 id 값 기준으로)
-	@GetMapping("/info/{id}")
-	public ResponseEntity<FindCustomerResDto> getCustomerInfo(@PathVariable Long id) {
-		return ResponseEntity.status(HttpStatus.OK).body(customerService.findUser(id));
+	// 손님 자신의 객체 조회 (일단은 id 값 기준으로)
+	@GetMapping("/info")
+	public ResponseEntity<FindCustomerResDto> getCustomerInfo(@CurrentMember VerifiedMember member) {
+		return ResponseEntity.status(HttpStatus.OK).body(customerService.findUser(member.getId()));
 	}
 
 	// 멤버 객체 수정 (일부 수정, id 값 기준)
-	@PatchMapping("/modify/{id}")
-	public ResponseEntity<UpdateCustomerResDto> modifyCustomer(@PathVariable Long id,
+	@PatchMapping("/modify")
+	public ResponseEntity<UpdateCustomerResDto> modifyCustomer(@CurrentMember VerifiedMember member,
 		@RequestBody ModifyCustomerReqDto reqDto) {
-		return ResponseEntity.status(HttpStatus.OK).body(customerService.modifyUser(id, reqDto));
+		return ResponseEntity.status(HttpStatus.OK).body(customerService.modifyUser(member.getId(), reqDto));
 	}
 
-	@DeleteMapping("/remove/{id}")
-	public ResponseEntity<Void> removeCustomer(@PathVariable Long id) {
-		customerService.removeUser(id);
+	// 회원 탈퇴
+	@DeleteMapping("/remove")
+	public ResponseEntity<Void> removeCustomer(@CurrentMember VerifiedMember member) {
+		customerService.removeUser(member.getId());
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
